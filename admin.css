@@ -1,0 +1,274 @@
+/* ===========================================
+   ADMIN LOGIN SCREEN
+   =========================================== */
+.admin-body {
+  background: var(--coastal-teal);
+  min-height: 100vh;
+}
+
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  color: var(--coastal-teal);
+  margin-bottom: 28px;
+}
+.login-logo strong { color: var(--sunshine); }
+
+.login-card h1 {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+.login-sub {
+  color: var(--coastal-teal-light);
+  font-size: 0.95rem;
+  margin-bottom: 28px;
+}
+
+#loginForm label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--coastal-teal);
+  margin-bottom: 6px;
+}
+#loginForm input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #E8E0D3;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  margin-bottom: 20px;
+  background: var(--sand);
+  color: var(--driftwood);
+}
+#loginForm input:focus {
+  outline: none;
+  border-color: var(--sunshine);
+}
+
+.login-btn {
+  width: 100%;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.login-error {
+  color: #B14545;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-top: 16px;
+  text-align: center;
+  min-height: 20px;
+}
+
+/* ===========================================
+   ADMIN DASHBOARD SHELL
+   =========================================== */
+.dashboard {
+  background: var(--sand);
+  min-height: 100vh;
+}
+
+.admin-header {
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  box-shadow: var(--shadow);
+}
+.admin-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  color: var(--coastal-teal);
+}
+.admin-header .logo strong { color: var(--sunshine); }
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: var(--coastal-teal-light);
+  font-weight: 600;
+}
+
+.admin-body-content {
+  padding: 40px 32px;
+}
+
+/* ===========================================
+   TABS
+   =========================================== */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  border-bottom: 2px solid #E8E0D3;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--coastal-teal-light);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+.tab-btn.active {
+  color: var(--sunshine-dark);
+  border-bottom-color: var(--sunshine);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.panel-header h2 { font-size: 1.4rem; }
+
+.status-text {
+  color: var(--coastal-teal-light);
+  font-weight: 600;
+  padding: 20px 0;
+}
+
+/* ===========================================
+   ADD/EDIT PUPPY FORM
+   =========================================== */
+.form-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+}
+.form-card h3 { margin-bottom: 20px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.form-card label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--coastal-teal);
+  margin-bottom: 6px;
+}
+.form-card input, .form-card select, .form-card textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #E8E0D3;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background: var(--sand);
+  color: var(--driftwood);
+}
+.form-card textarea { margin-bottom: 20px; resize: vertical; }
+.form-card input:focus, .form-card select:focus, .form-card textarea:focus {
+  outline: none;
+  border-color: var(--sunshine);
+}
+.form-actions { display: flex; gap: 12px; }
+.form-actions button { border: none; cursor: pointer; }
+
+/* ===========================================
+   ADMIN TABLES
+   =========================================== */
+.admin-table-wrap {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  box-shadow: var(--shadow);
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.admin-table th {
+  text-align: left;
+  padding: 14px 18px;
+  background: var(--sand-dark);
+  color: var(--coastal-teal);
+  font-family: var(--font-display);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.admin-table td {
+  padding: 14px 18px;
+  border-top: 1px solid #EFE8DA;
+  color: var(--driftwood);
+  vertical-align: top;
+}
+.admin-table td.message-cell { max-width: 260px; }
+.table-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.table-actions button {
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.btn-edit { background: var(--seafoam); color: var(--coastal-teal); }
+.btn-delete { background: #F1DADA; color: #A13A3A; }
+.btn-approve { background: #DDF0E4; color: #1F6B42; }
+
+.notes-box {
+  width: 100%;
+  min-width: 160px;
+  padding: 8px;
+  border: 2px solid #E8E0D3;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  background: var(--sand);
+  color: var(--driftwood);
+  resize: vertical;
+}
+.notes-box:focus { outline: none; border-color: var(--sunshine); }
+
+.photo-manager-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+}
+.photo-thumb {
+  background: var(--sand);
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+}
+.photo-thumb img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.photo-thumb button { width: 100%; border-radius: 0; padding: 8px; }

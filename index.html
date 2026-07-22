@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunshine Coastal Puppies | Find Your Perfect Puppy</title>
+  <meta name="description" content="Sunshine Coastal Puppies connects loving families with healthy, happy puppies. Browse available puppies and reach out to us directly." />
+
+  <!-- Fonts: Baloo 2 for headings, Nunito Sans for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Supabase connector library — lets our site talk to the database -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="logo">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="14" r="7" fill="#F4874B"/>
+          <path d="M4 30c2-6 7-9 14-9s12 3 14 9" stroke="#1F4B4C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>Sunshine Coastal <strong>Puppies</strong></span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#puppies">Available Puppies</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#trust">Why Us</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact" class="nav-cta">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <span class="eyebrow">Coastal-raised, family-ready</span>
+        <h1>Where sunshine meets puppy love.</h1>
+        <p>We connect loving families with healthy, happy puppies raised with care along the coast. Every puppy is well socialized, vet-checked, and ready for a home like yours.</p>
+        <div class="hero-actions">
+          <a href="#puppies" class="btn btn-primary">Browse Available Puppies</a>
+          <a href="#contact" class="btn btn-outline">Chat With Us</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <div class="hero-image-placeholder" id="heroImageWrap">
+          <span>🐾 Hero photo/video goes here</span>
+        </div>
+      </div>
+    </div>
+    <div class="wave-divider">
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,40 C240,90 480,0 720,40 C960,80 1200,10 1440,50 L1440,100 L0,100 Z" fill="#FBF3E7"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ FAVORITE BREEDS ============ -->
+  <section class="breed-grid-section" id="favorite-breeds">
+    <div class="container">
+      <h2 class="section-title">Favorite breeds</h2>
+      <p class="section-sub">Chosen time and time again by loving families.</p>
+      <div class="breed-photo-grid" id="breedPhotoGrid">
+        <p class="loading-text">Loading breeds...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST BADGES ============ -->
+  <section class="trust" id="trust">
+    <div class="container">
+      <h2 class="section-title">Why families choose Sunshine Coastal Puppies</h2>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon">🏡</div>
+          <h3>Raised With Care</h3>
+          <p>Every puppy is raised in a clean, loving environment — not a facility.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">🩺</div>
+          <h3>Vet-Checked</h3>
+          <p>Health checked and up to date on age-appropriate vaccinations.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">💬</div>
+          <h3>Personal Support</h3>
+          <p>Talk directly with us before you decide — no faceless checkout.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">📍</div>
+          <h3>Local & Transparent</h3>
+          <p>Know exactly where your puppy comes from, every step of the way.</p>
+        </div>
+      </div>
+
+      <div class="akc-badge" id="akcBadge" style="display:none;">
+        <span class="akc-badge-text" id="akcBadgeText"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AVAILABLE PUPPIES ============ -->
+  <section class="puppies" id="puppies">
+    <div class="container">
+      <h2 class="section-title">Available Puppies</h2>
+      <p class="section-sub">Meet a few of our puppies looking for their forever home.</p>
+
+      <!-- Search, breed filter, and sort controls -->
+      <div class="puppy-controls">
+        <input type="text" id="puppySearch" class="puppy-search" placeholder="Search by name or breed..." />
+        <select id="puppySort" class="puppy-sort">
+          <option value="newest">Newest first</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+        </select>
+      </div>
+
+      <div class="breed-filters" id="breedFilters">
+        <!-- Breed buttons are generated automatically by script.js -->
+      </div>
+
+      <div class="puppy-grid" id="puppyGrid">
+        <p class="loading-text">Loading puppies...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">Five simple steps to bringing your puppy home.</p>
+
+      <div class="steps-grid steps-grid-5">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Find Your Puppy</h3>
+          <p>Browse available puppies and filter by breed to find your match.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Reach Out to Us</h3>
+          <p>Message or call us — no online payment required to start the conversation.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Health & Readiness Check</h3>
+          <p>We confirm your puppy is healthy and ready before anything is finalized.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h3>Pickup or Delivery</h3>
+          <p>Arrange the handoff in the way that works best for your family.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">5</div>
+          <h3>Support for Life</h3>
+          <p>We're here for questions long after your puppy comes home.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REVIEWS ============ -->
+  <section class="reviews" id="reviews">
+    <div class="container">
+      <h2 class="section-title">Happy families, happy puppies</h2>
+      <div class="review-grid" id="reviewGrid">
+        <p class="loading-text">Loading reviews...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <h2 class="section-title">Common questions</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>How does delivery or pickup work?</summary>
+          <p>We offer both local pickup and safe delivery options to make bringing you new puppy home as convinient as possible</p>
+          <p>Once your puppy is ready to go home, we'll cordinate a pickup appointment or discuss on the best delivery option based on your location. Every puppy is thoroughly health-checked before depature, and we'll provide all necessary health records, vaccination information, and care instructions</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do you require a deposit?</summary>
+          <p>Yes. a non-refundable deposit is required to reserve a puppy.</p>
+          <p>The deposit ensures your selected puppy is held exclusively for you while final arrangements are made. The remaining balance is due before pickup or delivery unless otherwise agreed upon.</p>
+          <p>If you have questions about our reservation process or payment schedule, we're happy to walk you through every step.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What health guarantee do you offer?</summary>
+          <p>Every puppy receives a comprehensive veterinary health examination before joining their new family</p>
+          <p>Our puppies are up to date on age-appropriate vaccinations and deworming and come with detailed health records. We also provide a health guarantee covering congenital or hereditary conditions, giving you added confidence and peace of mind.</p>
+          <p>We're commited to responsible breeding practices and remain available to answer questions and provide ongoing support after you puppy goes home.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What payment methods do you accept?</summary>
+          <p>We accept several secure payment methods for your convinient, including:</p>
+          <li>Credit & Debit Cards</li>
+          <li>Bank Transfer</li>
+          <li>Cash (for local pickup, when applicable)</li>
+          <li>Gift Cards</li>
+          <li>Other aproved electronic payment methods</li>
+          <p>If you have questions about payment options or scheduling payments, please contact us before placing your deposit.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact" id="contact">
+    <div class="container contact-inner">
+      <div class="contact-text">
+        <h2>Let's talk about your new puppy.</h2>
+        <p>We don't process payments online — every puppy starts with a real conversation. Reach out however's easiest for you.</p>
+      </div>
+      <div class="contact-cards">
+        <a href="tel:" id="phoneLink" class="contact-card">
+          <span class="contact-icon">📞</span>
+          <span>Message/Call Us<br><strong id="phoneText">Coming soon</strong></span>
+        </a>
+        <a href="#" id="whatsappLink" class="contact-card" target="_blank">
+          <span class="contact-icon">💬</span>
+          <span>WhatsApp<br><strong id="whatsappText">Coming soon</strong></span>
+        </a>
+        <a href="#" id="facebookLink" class="contact-card" target="_blank">
+          <span class="contact-icon">📘</span>
+          <span>Facebook<br><strong id="facebookText">Coming soon</strong></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-col footer-brand">
+        <div class="logo footer-logo">
+          <svg width="30" height="30" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="14" r="7" fill="#F4874B"/>
+            <path d="M4 30c2-6 7-9 14-9s12 3 14 9" stroke="#FBF3E7" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span>Sunshine Coastal <strong>Puppies</strong></span>
+        </div>
+        <p id="footerAbout">We promise to find your perfect puppy and ensure your experience leaves you with a big smile and a warm heart.</p>
+        <div class="footer-social" id="footerSocial">
+          <a href="#" id="footerFacebook" target="_blank" aria-label="Facebook">Facebook</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="#puppies">Available Puppies</a>
+        <a href="#favorite-breeds">Favorite Breeds</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#reviews">Reviews</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#faq">FAQs</a>
+        <a href="#contact">Contact Us</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Get in Touch</h4>
+        <a href="tel:" id="footerPhone">Call us</a>
+        <a href="#" id="footerWhatsapp" target="_blank">WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© 2026 Sunshine Coastal Puppies. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

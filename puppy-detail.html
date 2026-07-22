@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Puppy Details | Sunshine Coastal Puppies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="14" r="7" fill="#F4874B"/>
+          <path d="M4 30c2-6 7-9 14-9s12 3 14 9" stroke="#1F4B4C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>Sunshine Coastal <strong>Puppies</strong></span>
+      </a>
+      <nav class="main-nav" style="display:flex;">
+        <a href="index.html#puppies">← Back to All Puppies</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="puppy-detail-section">
+    <div class="container" id="puppyDetailContent">
+      <p class="loading-text">Loading puppy details...</p>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <p>© 2026 Sunshine Coastal Puppies. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="puppy-detail.js"></script>
+</body>
+</html>

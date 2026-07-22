@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | Sunshine Coastal Puppies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="admin-body">
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <div class="login-wrap" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="14" r="7" fill="#F4874B"/>
+          <path d="M4 30c2-6 7-9 14-9s12 3 14 9" stroke="#1F4B4C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>Sunshine Coastal <strong>Admin</strong></span>
+      </div>
+
+      <h1>Log in</h1>
+      <p class="login-sub">Manage puppies, reviews, and inquiries.</p>
+
+      <form id="loginForm">
+        <label for="email">Email</label>
+        <input type="email" id="email" required autocomplete="username" />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="current-password" />
+
+        <button type="submit" class="btn btn-primary login-btn">Log In</button>
+      </form>
+
+      <p class="login-error" id="loginError"></p>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD (hidden until logged in) ============ -->
+  <div class="dashboard" id="dashboard" style="display: none;">
+    <header class="admin-header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="14" r="7" fill="#F4874B"/>
+          <path d="M4 30c2-6 7-9 14-9s12 3 14 9" stroke="#1F4B4C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>Sunshine Coastal <strong>Admin</strong></span>
+      </div>
+      <div class="admin-header-right">
+        <span id="userEmail"></span>
+        <button id="logoutBtn" class="btn btn-outline">Log Out</button>
+      </div>
+    </header>
+
+    <div class="admin-body-content">
+
+      <!-- Tab buttons -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="puppiesTab">🐶 Puppies</button>
+        <button class="tab-btn" data-tab="reviewsTab">⭐ Reviews</button>
+        <button class="tab-btn" data-tab="inquiriesTab">💬 Inquiries</button>
+        <button class="tab-btn" data-tab="breedsTab">🖼️ Breeds</button>
+        <button class="tab-btn" data-tab="settingsTab">⚙️ Settings</button>
+      </div>
+
+      <!-- ============ PUPPIES TAB ============ -->
+      <div class="tab-panel" id="puppiesTab">
+        <div class="panel-header">
+          <h2>Manage Puppies</h2>
+          <button class="btn btn-primary" id="showAddPuppyBtn">+ Add Puppy</button>
+        </div>
+
+        <!-- Add/Edit puppy form (hidden until needed) -->
+        <div class="form-card" id="puppyFormCard" style="display: none;">
+          <h3 id="puppyFormTitle">Add a New Puppy</h3>
+          <form id="puppyForm">
+            <input type="hidden" id="puppyId" />
+            <div class="form-grid">
+              <div><label>Name</label><input type="text" id="p_name" required /></div>
+              <div><label>Breed</label><input type="text" id="p_breed" required /></div>
+              <div><label>Gender</label>
+                <select id="p_gender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div><label>Age</label><input type="text" id="p_age" placeholder="e.g. 8 weeks" /></div>
+              <div><label>Price ($)</label><input type="text" id="p_price" placeholder="e.g. 1200" /></div>
+              <div><label>Ready Date</label><input type="text" id="p_ready_date" placeholder="e.g. Ready now" /></div>
+              <div><label>Status</label>
+                <select id="p_status">
+                  <option value="available">Available</option>
+                  <option value="reserved">Reserved</option>
+                  <option value="sold">Sold</option>
+                </select>
+              </div>
+              <div><label>Photo URL</label><input type="text" id="p_photo_url" placeholder="Paste an image link" /></div>
+            </div>
+            <label>Description</label>
+            <textarea id="p_description" rows="3"></textarea>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Puppy</button>
+              <button type="button" class="btn btn-outline" id="cancelPuppyFormBtn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="puppyListStatus" class="status-text">Loading puppies...</div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="puppyTable" style="display:none;">
+            <thead>
+              <tr><th>Name</th><th>Breed</th><th>Status</th><th>Price</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="puppyTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Photo gallery manager (hidden until "Photos" is clicked) -->
+        <div class="form-card" id="photoManagerCard" style="display:none;">
+          <h3 id="photoManagerTitle">Manage Photos</h3>
+          <p class="status-text" style="padding:0 0 12px;">Paste an image link and click Add. You can add as many as you want.</p>
+          <form id="addPhotoForm" style="display:flex; gap:12px; margin-bottom:20px;">
+            <input type="hidden" id="photoManagerPuppyId" />
+            <input type="text" id="newPhotoUrl" placeholder="Paste image URL..." style="flex:1; padding:10px 12px; border:2px solid #E8E0D3; border-radius:8px;" required />
+            <button type="submit" class="btn btn-primary">Add Photo</button>
+          </form>
+          <div class="photo-manager-grid" id="photoManagerGrid"></div>
+          <div class="form-actions" style="margin-top:20px;">
+            <button type="button" class="btn btn-outline" id="closePhotoManagerBtn">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ REVIEWS TAB ============ -->
+      <div class="tab-panel" id="reviewsTab" style="display:none;">
+        <div class="panel-header">
+          <h2>Manage Reviews</h2>
+          <button class="btn btn-primary" id="showAddReviewBtn">+ Add Review</button>
+        </div>
+
+        <!-- Add review form (hidden until needed) -->
+        <div class="form-card" id="reviewFormCard" style="display: none;">
+          <h3>Add a Review</h3>
+          <form id="reviewForm">
+            <div class="form-grid">
+              <div><label>Customer Name</label><input type="text" id="r_name" required /></div>
+              <div><label>Location</label><input type="text" id="r_location" placeholder="e.g. Tampa, FL" /></div>
+              <div><label>Rating (1-5)</label>
+                <select id="r_rating">
+                  <option value="5">5 stars</option>
+                  <option value="4.5">4.5 stars</option>
+                  <option value="4">4 stars</option>
+                  <option value="3">3 stars</option>
+                  <option value="2">2 stars</option>
+                  <option value="1">1 star</option>
+                </select>
+              </div>
+            </div>
+            <label>Review Text</label>
+            <textarea id="r_text" rows="3" required></textarea>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Review</button>
+              <button type="button" class="btn btn-outline" id="cancelReviewFormBtn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="reviewListStatus" class="status-text">Loading reviews...</div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="reviewTable" style="display:none;">
+            <thead>
+              <tr><th>Customer</th><th>Location</th><th>Rating</th><th>Review</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="reviewTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============ INQUIRIES TAB ============ -->
+      <div class="tab-panel" id="inquiriesTab" style="display:none;">
+        <div class="panel-header">
+          <h2>Client Inquiries</h2>
+        </div>
+        <div id="inquiryListStatus" class="status-text">Loading inquiries...</div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="inquiryTable" style="display:none;">
+            <thead>
+              <tr><th>Name</th><th>Contact</th><th>Puppy</th><th>Message</th><th>Status</th><th>Notes</th></tr>
+            </thead>
+            <tbody id="inquiryTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============ BREEDS TAB ============ -->
+      <div class="tab-panel" id="breedsTab" style="display:none;">
+        <div class="panel-header">
+          <h2>Favorite Breeds Photo Grid</h2>
+          <button class="btn btn-primary" id="showAddBreedBtn">+ Add Breed</button>
+        </div>
+
+        <div class="form-card" id="breedFormCard" style="display: none;">
+          <h3>Add a Breed Photo</h3>
+          <form id="breedForm">
+            <div class="form-grid">
+              <div><label>Breed Name</label><input type="text" id="b_breed" required placeholder="e.g. Goldendoodle" /></div>
+              <div><label>Photo URL</label><input type="text" id="b_photo_url" placeholder="Paste an image link (add later if you don't have one yet)" /></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Breed</button>
+              <button type="button" class="btn btn-outline" id="cancelBreedFormBtn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="breedListStatus" class="status-text">Loading breeds...</div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="breedTable" style="display:none;">
+            <thead>
+              <tr><th>Breed</th><th>Photo</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="breedTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============ SETTINGS TAB ============ -->
+      <div class="tab-panel" id="settingsTab" style="display:none;">
+        <div class="panel-header">
+          <h2>Site Settings</h2>
+        </div>
+        <div class="form-card">
+          <form id="settingsForm">
+            <div class="form-grid">
+              <div><label>Phone Number</label><input type="text" id="s_phone" placeholder="e.g. +1 555 123 4567" /></div>
+              <div><label>WhatsApp Number</label><input type="text" id="s_whatsapp" placeholder="Digits only, with country code" /></div>
+              <div><label>Facebook Page Link</label><input type="text" id="s_facebook" placeholder="https://facebook.com/yourpage" /></div>
+              <div><label>Hero Image URL</label><input type="text" id="s_hero_image_url" placeholder="Paste an image link for the homepage banner" /></div>
+            </div>
+            <label>AKC / Registration Badge Text</label>
+            <input type="text" id="s_akc_badge_text" placeholder="e.g. AKC-Registrable Litters" style="margin-bottom:20px;" />
+            <label>About Text (shown in footer)</label>
+            <textarea id="s_about_text" rows="3"></textarea>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Settings</button>
+            </div>
+          </form>
+          <p id="settingsSavedMsg" class="status-text" style="display:none; color:#1F6B42;">✅ Saved!</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
