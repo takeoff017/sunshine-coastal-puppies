@@ -8,6 +8,30 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ===========================================
+// UPLOAD A PHOTO FROM THE DEVICE'S GALLERY
+// Takes a file the person picked, uploads it to
+// Supabase Storage, and returns a real public URL
+// we can save in the database — same as pasting
+// a link, except we build the link for you.
+// ===========================================
+async function uploadPhoto(file) {
+  if (!file) return null;
+
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+
+  const { error } = await db.storage.from('photos').upload(fileName, file);
+  if (error) {
+    alert('Photo upload failed. Please try again.');
+    console.error(error);
+    return null;
+  }
+
+  const { data } = db.storage.from('photos').getPublicUrl(fileName);
+  return data.publicUrl;
+}
+
 // Grab the two main screens so we can show/hide them
 const loginScreen = document.getElementById('loginScreen');
 const dashboard = document.getElementById('dashboard');
@@ -171,7 +195,8 @@ async function editPuppy(id) {
   document.getElementById('p_price').value = p.price || '';
   document.getElementById('p_ready_date').value = p.ready_date || '';
   document.getElementById('p_status').value = p.status || 'available';
-  document.getElementById('p_photo_url').value = p.photo_url || '';
+  document.getElementById('p_photo_url_existing').value = p.photo_url || '';
+  document.getElementById('p_photo_url').value = ''; // file inputs can't be pre-filled; existing photo stays unless a new one is chosen
   document.getElementById('p_description').value = p.description || '';
 
   puppyFormTitle.textContent = 'Edit ' + p.name;
@@ -186,6 +211,12 @@ puppyForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const id = document.getElementById('puppyId').value;
+  const photoFile = document.getElementById('p_photo_url').files[0];
+  const existingPhotoUrl = document.getElementById('p_photo_url_existing').value;
+
+  // Only upload a new photo if the person actually picked one; otherwise keep whatever was already saved
+  const photoUrl = photoFile ? await uploadPhoto(photoFile) : existingPhotoUrl;
+
   const puppyData = {
     name: document.getElementById('p_name').value,
     breed: document.getElementById('p_breed').value,
@@ -194,7 +225,7 @@ puppyForm.addEventListener('submit', async (e) => {
     price: document.getElementById('p_price').value,
     ready_date: document.getElementById('p_ready_date').value,
     status: document.getElementById('p_status').value,
-    photo_url: document.getElementById('p_photo_url').value,
+    photo_url: photoUrl,
     description: document.getElementById('p_description').value,
   };
 
@@ -268,7 +299,11 @@ async function renderPhotoManagerGrid(puppyId) {
 addPhotoForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const puppyId = document.getElementById('photoManagerPuppyId').value;
-  const photoUrl = document.getElementById('newPhotoUrl').value;
+  const photoFile = document.getElementById('newPhotoUrl').files[0];
+  if (!photoFile) return;
+
+  const photoUrl = await uploadPhoto(photoFile);
+  if (!photoUrl) return; // upload failed, error already shown
 
   const { error } = await db.from('puppy_photos').insert({ puppy_id: puppyId, photo_url: photoUrl });
   if (error) {
@@ -464,10 +499,12 @@ async function loadBreedsAdmin() {
 const breedFormCard = document.getElementById('breedFormCard');
 const breedForm = document.getElementById('breedForm');
 let editingBreedId = null;
+let editingBreedExistingPhoto = '';
 
 document.getElementById('showAddBreedBtn').addEventListener('click', () => {
   breedForm.reset();
   editingBreedId = null;
+  editingBreedExistingPhoto = '';
   breedFormCard.style.display = 'block';
 });
 document.getElementById('cancelBreedFormBtn').addEventListener('click', () => {
@@ -478,16 +515,20 @@ async function editBreed(id) {
   const { data: b, error } = await db.from('breed_photos').select('*').eq('id', id).single();
   if (error) return alert('Could not load that breed.');
   document.getElementById('b_breed').value = b.breed;
-  document.getElementById('b_photo_url').value = b.photo_url || '';
+  document.getElementById('b_photo_url').value = ''; // file inputs can't be pre-filled
+  editingBreedExistingPhoto = b.photo_url || '';
   editingBreedId = id;
   breedFormCard.style.display = 'block';
 }
 
 breedForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  const photoFile = document.getElementById('b_photo_url').files[0];
+  const photoUrl = photoFile ? await uploadPhoto(photoFile) : editingBreedExistingPhoto;
+
   const breedData = {
     breed: document.getElementById('b_breed').value,
-    photo_url: document.getElementById('b_photo_url').value,
+    photo_url: photoUrl,
   };
 
   let error;
@@ -518,6 +559,8 @@ async function deleteBreed(id, name) {
 // ===========================================
 // SETTINGS — LOAD AND SAVE
 // ===========================================
+let existingHeroImageUrl = '';
+
 async function loadSettingsAdmin() {
   const { data, error } = await db.from('settings').select('*').eq('id', 1).single();
   if (error || !data) {
@@ -527,7 +570,8 @@ async function loadSettingsAdmin() {
   document.getElementById('s_phone').value = data.phone || '';
   document.getElementById('s_whatsapp').value = data.whatsapp || '';
   document.getElementById('s_facebook').value = data.facebook || '';
-  document.getElementById('s_hero_image_url').value = data.hero_image_url || '';
+  document.getElementById('s_hero_image_url').value = ''; // file inputs can't be pre-filled
+  existingHeroImageUrl = data.hero_image_url || '';
   document.getElementById('s_akc_badge_text').value = data.akc_badge_text || '';
   document.getElementById('s_about_text').value = data.about_text || '';
 }
@@ -535,11 +579,14 @@ async function loadSettingsAdmin() {
 document.getElementById('settingsForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  const heroFile = document.getElementById('s_hero_image_url').files[0];
+  const heroImageUrl = heroFile ? await uploadPhoto(heroFile) : existingHeroImageUrl;
+
   const settingsData = {
     phone: document.getElementById('s_phone').value,
     whatsapp: document.getElementById('s_whatsapp').value,
     facebook: document.getElementById('s_facebook').value,
-    hero_image_url: document.getElementById('s_hero_image_url').value,
+    hero_image_url: heroImageUrl,
     akc_badge_text: document.getElementById('s_akc_badge_text').value,
     about_text: document.getElementById('s_about_text').value,
   };
