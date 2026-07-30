@@ -97,7 +97,7 @@
                   <option value="sold">Sold</option>
                 </select>
               </div>
-              <div><label>Photo URL</label><input type="text" id="p_photo_url" placeholder="Paste an image link" /></div>
+              <div><label>Photo</label><input type="file" id="p_photo_url" accept="image/*" /><input type="hidden" id="p_photo_url_existing" /></div>
             </div>
             <label>Description</label>
             <textarea id="p_description" rows="3"></textarea>
@@ -125,7 +125,7 @@
           <p class="status-text" style="padding:0 0 12px;">Paste an image link and click Add. You can add as many as you want.</p>
           <form id="addPhotoForm" style="display:flex; gap:12px; margin-bottom:20px;">
             <input type="hidden" id="photoManagerPuppyId" />
-            <input type="text" id="newPhotoUrl" placeholder="Paste image URL..." style="flex:1; padding:10px 12px; border:2px solid #E8E0D3; border-radius:8px;" required />
+            <input type="file" id="newPhotoUrl" accept="image/*" style="flex:1; padding:10px 12px; border:2px solid #E8E0D3; border-radius:8px;" required />
             <button type="submit" class="btn btn-primary">Add Photo</button>
           </form>
           <div class="photo-manager-grid" id="photoManagerGrid"></div>
@@ -208,7 +208,7 @@
           <form id="breedForm">
             <div class="form-grid">
               <div><label>Breed Name</label><input type="text" id="b_breed" required placeholder="e.g. Goldendoodle" /></div>
-              <div><label>Photo URL</label><input type="text" id="b_photo_url" placeholder="Paste an image link (add later if you don't have one yet)" /></div>
+              <div><label>Photo</label><input type="file" id="b_photo_url" accept="image/*" /></div>
             </div>
             <div class="form-actions">
               <button type="submit" class="btn btn-primary">Save Breed</button>
@@ -239,7 +239,7 @@
               <div><label>Phone Number</label><input type="text" id="s_phone" placeholder="e.g. +1 555 123 4567" /></div>
               <div><label>WhatsApp Number</label><input type="text" id="s_whatsapp" placeholder="Digits only, with country code" /></div>
               <div><label>Facebook Page Link</label><input type="text" id="s_facebook" placeholder="https://facebook.com/yourpage" /></div>
-              <div><label>Hero Image URL</label><input type="text" id="s_hero_image_url" placeholder="Paste an image link for the homepage banner" /></div>
+              <div><label>Hero Image</label><input type="file" id="s_hero_image_url" accept="image/*" /></div>
             </div>
             <label>AKC / Registration Badge Text</label>
             <input type="text" id="s_akc_badge_text" placeholder="e.g. AKC-Registrable Litters" style="margin-bottom:20px;" />
